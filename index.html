@@ -869,6 +869,22 @@ FOOTER
 
     font-size:14px;
 
+    line-height:1.8;
+
+}
+
+.footer a{
+
+    color:var(--primary);
+
+    text-decoration:none;
+
+}
+
+.footer a:hover{
+
+    text-decoration:underline;
+
 }
 
 /* =========================================================
@@ -906,15 +922,76 @@ RESPONSIVE
 
 @media(max-width:600px){
 
+    .card{
+
+        padding:18px;
+
+    }
+
+    .trip-block{
+
+        padding:14px;
+
+    }
+
+    .global-integration-box{
+
+        padding:14px;
+
+    }
+
     .integration-option{
 
         flex-wrap:wrap;
+
+        padding:12px;
 
     }
 
     .integration-right{
 
         margin-left:30px;
+
+        width:calc(100% - 30px);
+
+        justify-content:flex-end;
+
+    }
+
+    .integration-option label{
+
+        font-size:14px;
+
+    }
+
+    .integration-value{
+
+        font-size:14px;
+
+        min-width:55px;
+
+    }
+
+    .trip-item{
+
+        padding:10px 14px;
+
+        font-size:14px;
+
+    }
+
+    .trip-remove{
+
+        width:24px;
+        height:24px;
+
+        font-size:12px;
+
+    }
+
+    .summary{
+
+        padding:18px;
 
     }
 
@@ -930,7 +1007,7 @@ TUTORIAL MODAL
 
     inset:0;
 
-    background:rgba(0,0,0,.9);
+    background:rgba(0,0,0,.95);
 
     backdrop-filter:blur(8px);
 
@@ -1450,7 +1527,7 @@ TUTORIAL MODAL
             <button class="print-btn"
             onclick="generatePDF()">
 
-                Gerar Demonstrativo PDF
+                🖨 Gerar Demonstrativo PDF
 
             </button>
 
@@ -1489,7 +1566,8 @@ TUTORIAL MODAL
 
     <div class="footer">
 
-        © 2026 Calculadora Passagem - RJ - Desenvolvido profissionalmente por Nelson Martins
+        © 2026 Calculadora Passagem - RJ - Desenvolvido por Nelson Martins<br>
+        Contato profissional: <a href="mailto:nlsn.dba@gmail.com">nlsn.dba@gmail.com</a>
 
     </div>
 
@@ -1554,7 +1632,7 @@ TUTORIAL MODAL
                 <div class="tutorial-step">
                     <div class="tutorial-number">5</div>
                     <div>
-                        <strong>Gere o demonstrativo</strong>
+                        <strong>📄 Gere o demonstrativo</strong>
                         <span>Clique em "Gerar Demonstrativo PDF" para salvar o relatório completo.</span>
                     </div>
                 </div>
@@ -1720,7 +1798,6 @@ function removeTrip(type,index){
 
     arr.splice(index,1);
 
-    // Reset global integration if needed
     if(type === "ida" && ida.length === 0){
         idaGlobalIntegration = "none";
     }
@@ -1806,7 +1883,6 @@ function renderList(type){
 
     wrapper.appendChild(row);
 
-    // Verifica quais tipos de integração estão disponíveis neste trajeto
     let hasOnibusIntegration = false;
     let hasBrtMetroJardim = false;
     let hasBrtMetroVicente = false;
@@ -1833,13 +1909,11 @@ function renderList(type){
         }
     }
     
-    // Se não há nenhuma integração possível, não mostra o box
     if(!hasOnibusIntegration && !hasBrtMetroJardim && !hasTremMetro){
         root.appendChild(wrapper);
         return;
     }
     
-    // Cria o box GLOBAL de integração (UMA escolha para todo o trajeto)
     const globalBox =
         document.createElement("div");
 
@@ -1855,7 +1929,6 @@ function renderList(type){
     
     const currentGlobal = type === "ida" ? idaGlobalIntegration : voltaGlobalIntegration;
     
-    // Opção Ônibus + Ônibus (ou BRT)
     if(hasOnibusIntegration){
         globalBox.innerHTML += `
             <div class="integration-option">
@@ -1871,7 +1944,6 @@ function renderList(type){
         `;
     }
     
-    // Opção BRT + Metrô - Jardim Oceânico
     if(hasBrtMetroJardim){
         globalBox.innerHTML += `
             <div class="integration-option">
@@ -1897,7 +1969,6 @@ function renderList(type){
         `;
     }
     
-    // Opção Trem + Metrô
     if(hasTremMetro){
         globalBox.innerHTML += `
             <div class="integration-option">
@@ -1913,7 +1984,6 @@ function renderList(type){
         `;
     }
     
-    // Opção Sem integração oficial (sempre disponível)
     globalBox.innerHTML += `
             <div class="integration-option">
                 <input type="radio" name="${type}-global-integration" value="none" 
@@ -1956,7 +2026,6 @@ function calculateTrip(arr, globalIntegration){
             const isBrtMetro = (current.mode==="BRT" && next.mode==="Metrô") || (current.mode==="Metrô" && next.mode==="BRT");
             const isTremMetro = (current.mode==="Trem" && next.mode==="Metrô") || (current.mode==="Metrô" && next.mode==="Trem");
 
-            // Integração Ônibus + Ônibus (ou BRT)
             if(globalIntegration === "onibus" && (isOnibusOnibus || isOnibusBrt)){
                 total += 5.00;
                 jae += 5.00;
@@ -1971,7 +2040,6 @@ function calculateTrip(arr, globalIntegration){
                 continue;
             }
             
-            // Integração BRT + Metrô - Jardim Oceânico
             if(globalIntegration === "jardim" && isBrtMetro){
                 total += 9.70;
                 jae += 9.70;
@@ -1986,7 +2054,6 @@ function calculateTrip(arr, globalIntegration){
                 continue;
             }
             
-            // Integração BRT + Metrô - Vicente de Carvalho
             if(globalIntegration === "vicente" && isBrtMetro){
                 total += 9.70;
                 jae += 9.70;
@@ -2001,7 +2068,6 @@ function calculateTrip(arr, globalIntegration){
                 continue;
             }
             
-            // Integração Trem + Metrô
             if(globalIntegration === "tremmetro" && isTremMetro){
                 total += 9.40;
                 riocard += 9.40;
@@ -2017,7 +2083,6 @@ function calculateTrip(arr, globalIntegration){
             }
         }
 
-        // Sem integração ou integração não se aplica - cobra tarifa normal
         total += fares[current.mode];
         if(cards[current.mode] === "Jaé"){
             jae += fares[current.mode];
@@ -2392,151 +2457,270 @@ function renderFareTable(){
 }
 
 /* =========================================================
-PDF
+PDF - VERSÃO PROFISSIONAL ESTILO RECIBO (FONTES PRETAS)
 ========================================================= */
 
 async function generatePDF(){
 
     const { jsPDF } = window.jspdf;
 
-    const doc =
-        new jsPDF({
+    // Criar documento com margens para estilo recibo
+    const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+    });
 
-            orientation:"portrait",
-            unit:"px",
-            format:[1080,1920]
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 15;
+    let y = margin + 10;
 
-        });
+    // CORES (apenas para linhas decorativas - fontes em PRETO)
+    const primaryColor = [77, 216, 255];
+    const blackColor = [0, 0, 0];
+    const grayColor = [80, 80, 80];
 
-    doc.setFillColor(255,255,255);
-    doc.rect(0,0,1080,1920,"F");
+    // =========================================================
+    // CABEÇALHO
+    // =========================================================
+    
+    // Linha superior decorativa
+    doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setLineWidth(1.5);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 12; // Aumentado o espaçamento (antes era 5, agora 12)
+    
+    // Título principal (fonte PRETA)
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(blackColor[0], blackColor[1], blackColor[2]);
+    doc.text("CALCULADORA PASSAGEM - RJ", pageWidth / 2, y, { align: "center" });
+    y += 8;
+    
+    // Subtítulo (fonte PRETA)
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
+    doc.text("Demonstrativo de Vale Transporte", pageWidth / 2, y, { align: "center" });
+    y += 6;
+    
+    // Data (fonte PRETA)
+    const hoje = new Date();
+    const dataAtual = hoje.toLocaleDateString('pt-BR');
+    doc.setFontSize(9);
+    doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
+    doc.text(`Emissão: ${dataAtual}`, pageWidth - margin, y, { align: "right" });
+    y += 6;
+    
+    // Linha decorativa
+    doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 10;
 
-    let y = 80;
-
-    doc.setFontSize(42);
-
-    doc.text(
-        "DEMONSTRATIVO DE VALE TRANSPORTE",
-        60,
-        y
-    );
-
-    y += 70;
-
-    doc.setFontSize(24);
-
+    // =========================================================
+    // INFORMAÇÕES DO PERÍODO
+    // =========================================================
+    
     const monthNames = [
         "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
         "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
     ];
+    
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(blackColor[0], blackColor[1], blackColor[2]);
+    doc.text("Período de Referência", margin, y);
+    y += 6;
+    
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
+    doc.text(`${monthNames[currentMonth]} de ${currentYear}`, margin, y);
+    y += 5;
+    doc.text(`Dias úteis: ${selectedDays} dias`, margin, y);
+    y += 12;
 
-    doc.text(
-        `Dias úteis: ${selectedDays} (${monthNames[currentMonth]} de ${currentYear})`,
-        60,
-        y
-    );
-
-    y += 80;
-
-    const idaCalc =
-        calculateTrip(ida, idaGlobalIntegration);
-
-    const voltaCalc =
-        calculateTrip(volta, voltaGlobalIntegration);
-
-    doc.text("IDA:",60,y);
-
-    y += 40;
-
-    idaCalc.lines.forEach(line=>{
-
-        doc.text(
-
-            `${line.name} - R$ ${line.value.toFixed(2)} - ${line.card}`,
-
-            80,
-            y
-
-        );
-
-        y += 36;
-
+    // =========================================================
+    // TRAJETO IDA
+    // =========================================================
+    
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(blackColor[0], blackColor[1], blackColor[2]);
+    doc.text("TRAJETO DE IDA", margin, y);
+    y += 2;
+    
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 6;
+    
+    const idaCalc = calculateTrip(ida, idaGlobalIntegration);
+    
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    idaCalc.lines.forEach(line => {
+        // Fonte PRETA para todas as linhas
+        doc.setTextColor(blackColor[0], blackColor[1], blackColor[2]);
+        
+        // Descrição
+        doc.text(line.name, margin, y);
+        // Valor alinhado à direita
+        let valorStr = `R$ ${line.value.toFixed(2)}`;
+        let valorWidth = doc.getStringUnitWidth(valorStr) * 9 / doc.internal.scaleFactor;
+        doc.text(valorStr, pageWidth - margin - valorWidth, y);
+        // Cartão
+        doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
+        doc.text(line.card, pageWidth - margin - valorWidth - 20, y);
+        
+        y += 6;
     });
+    
+    y += 2;
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 6;
+    
+    // Total Ida
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(blackColor[0], blackColor[1], blackColor[2]);
+    doc.text("Total Ida", margin, y);
+    let totalIdaStr = `R$ ${idaCalc.total.toFixed(2)}`;
+    let totalIdaWidth = doc.getStringUnitWidth(totalIdaStr) * 10 / doc.internal.scaleFactor;
+    doc.text(totalIdaStr, pageWidth - margin - totalIdaWidth, y);
+    y += 12;
 
-    y += 60;
-
-    doc.text("VOLTA:",60,y);
-
-    y += 40;
-
-    voltaCalc.lines.forEach(line=>{
-
-        doc.text(
-
-            `${line.name} - R$ ${line.value.toFixed(2)} - ${line.card}`,
-
-            80,
-            y
-
-        );
-
-        y += 36;
-
+    // =========================================================
+    // TRAJETO VOLTA
+    // =========================================================
+    
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(blackColor[0], blackColor[1], blackColor[2]);
+    doc.text("TRAJETO DE VOLTA", margin, y);
+    y += 2;
+    
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 6;
+    
+    const voltaCalc = calculateTrip(volta, voltaGlobalIntegration);
+    
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    voltaCalc.lines.forEach(line => {
+        // Fonte PRETA para todas as linhas
+        doc.setTextColor(blackColor[0], blackColor[1], blackColor[2]);
+        
+        doc.text(line.name, margin, y);
+        let valorStr = `R$ ${line.value.toFixed(2)}`;
+        let valorWidth = doc.getStringUnitWidth(valorStr) * 9 / doc.internal.scaleFactor;
+        doc.text(valorStr, pageWidth - margin - valorWidth, y);
+        doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
+        doc.text(line.card, pageWidth - margin - valorWidth - 20, y);
+        
+        y += 6;
     });
+    
+    y += 2;
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 6;
+    
+    // Total Volta
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(blackColor[0], blackColor[1], blackColor[2]);
+    doc.text("Total Volta", margin, y);
+    let totalVoltaStr = `R$ ${voltaCalc.total.toFixed(2)}`;
+    let totalVoltaWidth = doc.getStringUnitWidth(totalVoltaStr) * 10 / doc.internal.scaleFactor;
+    doc.text(totalVoltaStr, pageWidth - margin - totalVoltaWidth, y);
+    y += 15;
 
-    y += 80;
+    // =========================================================
+    // RESUMO MENSAL
+    // =========================================================
+    
+    doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setLineWidth(1);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 8;
+    
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(blackColor[0], blackColor[1], blackColor[2]);
+    doc.text("RESUMO MENSAL", pageWidth / 2, y, { align: "center" });
+    y += 8;
+    
+    const totalJae = (idaCalc.jae + voltaCalc.jae) * selectedDays;
+    const totalRiocard = (idaCalc.riocard + voltaCalc.riocard) * selectedDays;
+    const totalGeral = totalJae + totalRiocard;
+    
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    
+    // Total Jaé (fonte PRETA)
+    doc.setTextColor(blackColor[0], blackColor[1], blackColor[2]);
+    doc.text("Total Jaé", margin, y);
+    let jaeStr = `R$ ${totalJae.toFixed(2)}`;
+    let jaeWidth = doc.getStringUnitWidth(jaeStr) * 11 / doc.internal.scaleFactor;
+    doc.text(jaeStr, pageWidth - margin - jaeWidth, y);
+    y += 7;
+    
+    // Total RioCard (fonte PRETA)
+    doc.setTextColor(blackColor[0], blackColor[1], blackColor[2]);
+    doc.text("Total RioCard", margin, y);
+    let rioStr = `R$ ${totalRiocard.toFixed(2)}`;
+    let rioWidth = doc.getStringUnitWidth(rioStr) * 11 / doc.internal.scaleFactor;
+    doc.text(rioStr, pageWidth - margin - rioWidth, y);
+    y += 8;
+    
+    // Linha separadora
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 8;
+    
+    // Total Geral (destaque - fonte PRETA)
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.text("TOTAL GERAL", margin, y);
+    let totalStr = `R$ ${totalGeral.toFixed(2)}`;
+    let totalWidth = doc.getStringUnitWidth(totalStr) * 14 / doc.internal.scaleFactor;
+    doc.text(totalStr, pageWidth - margin - totalWidth, y);
+    y += 15;
 
-    const totalJae =
-        (idaCalc.jae + voltaCalc.jae)
-        * selectedDays;
-
-    const totalRiocard =
-        (idaCalc.riocard + voltaCalc.riocard)
-        * selectedDays;
-
-    const total =
-        totalJae + totalRiocard;
-
-    doc.setFontSize(30);
-
-    doc.text(
-        `TOTAL JAÉ: R$ ${totalJae.toFixed(2)}`,
-        60,
-        y
-    );
-
-    y += 50;
-
-    doc.text(
-        `TOTAL RIOCARD: R$ ${totalRiocard.toFixed(2)}`,
-        60,
-        y
-    );
-
-    y += 50;
-
-    doc.text(
-        `TOTAL GERAL: R$ ${total.toFixed(2)}`,
-        60,
-        y
-    );
-
-    y += 120;
-
-    doc.setFontSize(20);
-
-    doc.text(
-
-        "© 2026 Calculadora Passagem - RJ - Desenvolvido profissionalmente por Nelson Martins",
-
-        60,
-        y
-
-    );
-
-    doc.save(
-        "demonstrativo-mobility-rj-pro.pdf"
-    );
+    // =========================================================
+    // RODAPÉ
+    // =========================================================
+    
+    doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 6;
+    
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(grayColor[0], grayColor[1], grayColor[2]);
+    doc.text("© 2026 Calculadora Passagem - RJ - Desenvolvido por Nelson Martins", pageWidth / 2, y, { align: "center" });
+    y += 5;
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.text("Contato profissional: nlsn.dba@gmail.com", pageWidth / 2, y, { align: "center" });
+    
+    // Linha final decorativa
+    y += 5;
+    doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setLineWidth(1);
+    doc.line(margin, y, pageWidth - margin, y);
+    
+    // Salvar PDF
+    doc.save("demonstrativo-calculadora-passagem.pdf");
 
 }
 
